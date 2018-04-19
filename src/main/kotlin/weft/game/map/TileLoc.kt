@@ -26,14 +26,14 @@ data class TileLoc(val x: Int, val y: Int){
     }
 
     companion object {
-        val D : Int = 1
+        const val D: Int = 1
         val D2: Double = Math.sqrt(2.0)
 
         fun random(dim: Dimension) : TileLoc{
             return random(0, dim.width, 0, dim.height)
         }
 
-        fun random(minX: Int, maxX: Int, minY: Int, maxY: Int) : TileLoc{
+        private fun random(minX: Int, maxX: Int, minY: Int, maxY: Int): TileLoc {
             return TileLoc(Dice.random(minX, maxX), Dice.random(minY, maxY))
         }
     }

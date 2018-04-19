@@ -19,7 +19,7 @@ abstract class Dice(val size: Int, val count: Int) {
     }
 
     companion object {
-        public val randGenerator: Random = Random()
+        val randGenerator: Random = Random()
 
         fun random(min: Int, max: Int) : Int {
             require(min >= 0) {"|min| [$min] must be >= 0"}

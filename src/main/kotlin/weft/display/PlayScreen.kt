@@ -1,12 +1,12 @@
 package weft.display
 
+import weft.Messages
 import weft.game.map.GameMap
 import weft.game.map.generators.CaveMapGenerator
 import weft.game.map.generators.EmptyMapGenerator
-import weft.messages.KeyType
-import weft.messages.Message
 import java.awt.Point
 import java.awt.Rectangle
+import java.awt.event.KeyEvent
 
 class PlayScreen(terminal: Display) : Screen(terminal) {
 	private var world: GameMap = GameMap(EmptyMapGenerator())
@@ -46,13 +46,13 @@ class PlayScreen(terminal: Display) : Screen(terminal) {
 			nextScreen = MessageScreen(display, listOf("You died"))
 	}
 
-	override fun processKeyPress(key: Message.KeyPress) {
+	override fun processKeyPress(key: Messages.KeyPress) {
 		if (world.player.processKeyPress(key))
-			return;
+			return
 
 		nextScreen = when (key.key) {
-			KeyType.Escape -> MessageScreen(display, listOf("You lost"))
-			KeyType.Enter -> MessageScreen(display, listOf("You won"))
+			KeyEvent.VK_ESCAPE -> MessageScreen(display, listOf("You lost"))
+			KeyEvent.VK_ENTER -> MessageScreen(display, listOf("You won"))
 			else -> nextScreen
 		}
 	}

@@ -3,7 +3,7 @@ package weft.display
 
 import java.awt.Color
 
-data class GlyphString (val text: String = "", val foregroundColor: Color = Color.WHITE, val backgroundColor: Color = Color.BLACK){
+data class GlyphString(private val text: String = "", private val foregroundColor: Color = Color.WHITE, private val backgroundColor: Color = Color.BLACK) {
 
     val length: Int
         get() { return text.length}

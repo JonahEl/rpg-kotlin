@@ -2,13 +2,16 @@ package weft.game.creatures
 
 import weft.display.Glyph
 import weft.game.dice.Dice
-import weft.game.map.*
+import weft.game.map.Direction
+import weft.game.map.GameMap
+import weft.game.map.MoveCost
+import weft.game.map.TileLoc
 import java.awt.Dimension
 import java.awt.Point
 
-class Projectile(map: GameMap, glyph: Glyph, name: String, val damage: Dice, val range: Int, val targetTile: TileLoc)  : Entity(map, glyph, name) {
-    var isDead: Boolean = false
-    var distanceTravelled: Int = 0
+class Projectile(map: GameMap, glyph: Glyph, name: String, private val damage: Dice, private val range: Int, private val targetTile: TileLoc) : Entity(map, glyph, name) {
+    private var isDead: Boolean = false
+    private var distanceTravelled: Int = 0
         set(value) {
             field = value
             if (field > range)
@@ -26,8 +29,8 @@ class Projectile(map: GameMap, glyph: Glyph, name: String, val damage: Dice, val
             map.projectiles.remove(this)
     }
 
-    fun moveBy(dir: Direction) {
-        val newLoc = position.offset(dir);
+    private fun moveBy(dir: Direction) {
+        val newLoc = position.offset(dir)
         val other = map.creatures.at(newLoc)
         if (other == null) {
             if (map.tiles[newLoc].moveCost == MoveCost.Open) {
@@ -40,15 +43,15 @@ class Projectile(map: GameMap, glyph: Glyph, name: String, val damage: Dice, val
             attack(other)
     }
 
-    fun attack(other: Creature) {
-        println("$this attacks ${other} for $damage")
+    private fun attack(other: Creature) {
+        println("$this attacks $other for $damage")
         other.currentHealth -= damage.roll()
 
         if (other.isDead) {
-            println("${other} dies")
+            println("$other dies")
             map.creatures.remove(other)
         } else {
-            println("${other} has ${other.currentHealth} health left")
+            println("$other has ${other.currentHealth} health left")
         }
 
         isDead = true

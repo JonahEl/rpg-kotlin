@@ -1,7 +1,6 @@
 package weft.game.creatures
 
 import weft.display.Glyph
-import weft.game.map.TileLoc
 import weft.game.creatures.ai.BaseAI
 import weft.game.dice.D0
 import weft.game.dice.Dice
@@ -9,7 +8,6 @@ import weft.game.map.Direction
 import weft.game.map.GameMap
 import java.awt.Dimension
 import java.awt.Point
-import java.util.concurrent.atomic.AtomicLong
 
 open class Creature(map: GameMap, glyph: Glyph, name: String) : Entity(map, glyph, name) {
     var sightRange: Int = 1
@@ -34,7 +32,7 @@ open class Creature(map: GameMap, glyph: Glyph, name: String) : Entity(map, glyp
     }
 
     fun moveBy(dir: Direction) {
-        val newLoc = position.offset(dir);
+        val newLoc = position.offset(dir)
         val other = map.creatures.at(newLoc)
         if (other == null)
             ai.onEnter(newLoc, map.tiles[newLoc])
@@ -43,15 +41,15 @@ open class Creature(map: GameMap, glyph: Glyph, name: String) : Entity(map, glyp
     }
 
     fun attack(other: Creature) {
-        println("$this attacks ${other} for $attack")
+        println("$this attacks $other for $attack")
         other.currentHealth -= attack.roll()
 
         if (other.isDead) {
-            println("${other} dies")
+            println("$other dies")
             map.creatures.remove(other)
         } else {
             other.ai.onAttacked(this)
-            println("${other} has ${other.currentHealth} health left")
+            println("$other has ${other.currentHealth} health left")
         }
     }
 }

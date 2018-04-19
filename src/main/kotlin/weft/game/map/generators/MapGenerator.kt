@@ -7,7 +7,6 @@ import weft.game.map.TileType
 
 abstract class MapGenerator(protected val width: Int, protected val height: Int) {
     var tiles: Array<Array<TileType>> = Array(width) { Array(height, { TileType.Floor }) }
-        get() {return field}
         protected set(value) {
             require(value.size == width){"|tiles.size| [${value.size}] must equal |width| $width"}
             require(value[0].size == height){"|tiles[0].size| [${value[0].size}] must equal |height| $height"}

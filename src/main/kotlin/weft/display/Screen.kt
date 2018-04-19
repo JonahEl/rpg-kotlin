@@ -1,6 +1,6 @@
 package weft.display
 
-import weft.messages.Message
+import weft.Messages
 import java.awt.Dimension
 
 abstract class Screen(val display: Display) {
@@ -23,7 +23,7 @@ abstract class Screen(val display: Display) {
 
 	open fun update() {}
 
-	open fun processKeyPress(key: Message.KeyPress) {}
+	open fun processKeyPress(key: Messages.KeyPress) {}
 
 	data class Swap(val newScreen: Screen, val changed: Boolean)
 }

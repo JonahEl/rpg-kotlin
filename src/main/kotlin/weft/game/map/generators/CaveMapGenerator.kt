@@ -43,10 +43,11 @@ class CaveMapGenerator(width: Int, height: Int) : MapGenerator(width, height) {
                                 rocks++
                         }
                     }
-                    tiles2[x][y] = if (floors >= rocks)
-                            TileType.Floor
-                            else if(Coin.flip()) TileType.DirtWall
-                            else TileType.StoneWall
+                    tiles2[x][y] = when {
+                        floors >= rocks -> TileType.Floor
+                        Coin.flip() -> TileType.DirtWall
+                        else -> TileType.StoneWall
+                    }
                 }
             }
             tiles = tiles2

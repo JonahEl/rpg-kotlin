@@ -1,16 +1,16 @@
 package weft.game.creatures
 
+import weft.Messages
 import weft.display.Glyph
 import weft.game.creatures.ai.PlayerAI
 import weft.game.dice.D20
 import weft.game.dice.D6
 import weft.game.map.Direction
 import weft.game.map.GameMap
-import weft.messages.KeyType
-import weft.messages.Message
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Point
+import java.awt.event.KeyEvent
 
 class Player(map: GameMap) : Creature(map, Glyph(0x26F5, Color.WHITE), "Player") {
 
@@ -45,27 +45,27 @@ class Player(map: GameMap) : Creature(map, Glyph(0x26F5, Color.WHITE), "Player")
 		map.projectiles.addAt(Projectile(map, Glyph('◦', Color.RED), "Projectile", attack, attackRange, t.position), position)
 	}
 
-	fun processKeyPress(key: Message.KeyPress): Boolean {
+	fun processKeyPress(key: Messages.KeyPress): Boolean {
 		when (key.key) {
-			KeyType.Num9,
-			KeyType.PageUp -> moveBy(Direction.NE);
-			KeyType.Num8,
-			KeyType.ArrowUp -> moveBy(Direction.N);
-			KeyType.Num7,
-			KeyType.Home -> moveBy(Direction.NW);
-			KeyType.Num6,
-			KeyType.ArrowRight -> moveBy(Direction.E)
-			KeyType.Num5,
-			KeyType.Clear -> rest()
-			KeyType.Space -> fire()
-			KeyType.Num4,
-			KeyType.ArrowLeft -> moveBy(Direction.W)
-			KeyType.Num3,
-			KeyType.PageDown -> moveBy(Direction.SE)
-			KeyType.Num2,
-			KeyType.ArrowDown -> moveBy(Direction.S)
-			KeyType.Num1,
-			KeyType.End -> moveBy(Direction.SW)
+			KeyEvent.VK_NUMPAD9,
+			KeyEvent.VK_PAGE_UP -> moveBy(Direction.NE)
+			KeyEvent.VK_NUMPAD8,
+			KeyEvent.VK_UP -> moveBy(Direction.N)
+			KeyEvent.VK_NUMPAD7,
+			KeyEvent.VK_HOME -> moveBy(Direction.NW)
+			KeyEvent.VK_NUMPAD6,
+			KeyEvent.VK_RIGHT -> moveBy(Direction.E)
+			KeyEvent.VK_NUMPAD5,
+			KeyEvent.VK_CLEAR -> rest()
+			KeyEvent.VK_SPACE -> fire()
+			KeyEvent.VK_NUMPAD4,
+			KeyEvent.VK_LEFT -> moveBy(Direction.W)
+			KeyEvent.VK_NUMPAD3,
+			KeyEvent.VK_PAGE_DOWN -> moveBy(Direction.SE)
+			KeyEvent.VK_NUMPAD2,
+			KeyEvent.VK_DOWN -> moveBy(Direction.S)
+			KeyEvent.VK_NUMPAD1,
+			KeyEvent.VK_END -> moveBy(Direction.SW)
 			else -> return false
 		}
 

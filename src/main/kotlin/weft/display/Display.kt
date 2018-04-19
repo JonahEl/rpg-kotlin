@@ -14,7 +14,7 @@ class Display(val widthInCharacters: Int = 80, val heightInCharacters: Int = 40)
 		val changed = mutableListOf<GlyphCell>()
 		for (x in 0 until widthInCharacters) {
 			for (y in 0 until heightInCharacters) {
-				val cell = cells[x][y];
+				val cell = cells[x][y]
 				changed.add(GlyphCell(x, y, cell.copy()))
 				if (resetDirtyFlag)
 					cell.dirty = false
@@ -27,7 +27,7 @@ class Display(val widthInCharacters: Int = 80, val heightInCharacters: Int = 40)
 		val changed = mutableListOf<GlyphCell>()
 		for (x in 0 until widthInCharacters) {
 			for (y in 0 until heightInCharacters) {
-				val cell = cells[x][y];
+				val cell = cells[x][y]
 				if (!cell.dirty)
 					continue
 
@@ -45,7 +45,7 @@ class Display(val widthInCharacters: Int = 80, val heightInCharacters: Int = 40)
 		return clear(cell, 0, 0, widthInCharacters, heightInCharacters)
 	}
 
-	fun clear(cell: Glyph, x: Int, y: Int, width: Int, height: Int): Boolean {
+	private fun clear(cell: Glyph, x: Int, y: Int, width: Int, height: Int): Boolean {
 		require(x in 0..(widthInCharacters - 1)) { "x $x must be within range [0,$widthInCharacters)" }
 		require(y in 0..(heightInCharacters - 1)) { "y $y must be within range [0,$heightInCharacters)" }
 		require(width > 0) { "width $width must be greater than 0." }
@@ -69,19 +69,19 @@ class Display(val widthInCharacters: Int = 80, val heightInCharacters: Int = 40)
 		require(y in 0..(heightInCharacters - 1)) { "y $y must be within range [0,$heightInCharacters)" }
 
 		val g = glyph.copy()
-		if (g != cells[x][y]) {
+		return if (g != cells[x][y]) {
 			g.dirty = true
 			cells[x][y] = g
-			return true
+			true
 		} else
-			return false
+			false
 	}
 
 	fun write(string: String, x: Int, y: Int): Boolean {
 		return write(GlyphString(string), x, y)
 	}
 
-	fun write(string: GlyphString, x: Int, y: Int): Boolean {
+	private fun write(string: GlyphString, x: Int, y: Int): Boolean {
 		require(x + string.length < widthInCharacters) { "x + string.length() " + (x + string.length) + " must be less than " + widthInCharacters + "." }
 		require(x in 0..(widthInCharacters - 1)) { "x $x must be within range [0,$widthInCharacters)" }
 		require(y in 0..(heightInCharacters - 1)) { "y $y must be within range [0,$heightInCharacters)" }
@@ -98,7 +98,7 @@ class Display(val widthInCharacters: Int = 80, val heightInCharacters: Int = 40)
 		return writeCenter(GlyphString(string), y)
 	}
 
-	fun writeCenter(string: GlyphString, y: Int): Boolean {
+	private fun writeCenter(string: GlyphString, y: Int): Boolean {
 		require(string.length < widthInCharacters) { "string.length() " + string.length + " must be less than " + widthInCharacters + "." }
 
 		val x = (widthInCharacters - string.length) / 2

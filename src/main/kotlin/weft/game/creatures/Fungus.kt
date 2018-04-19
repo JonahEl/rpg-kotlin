@@ -5,7 +5,6 @@ import weft.game.creatures.ai.FungusAI
 import weft.game.dice.D6
 import weft.game.map.Direction
 import weft.game.map.GameMap
-import weft.game.map.MoveCost
 import weft.game.map.TileLoc
 import java.awt.Color
 

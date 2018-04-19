@@ -20,7 +20,7 @@ class TileList(private val tiles: Array<Array<TileType>>) {
     }
 
     tailrec fun randomNonBlocking(): TileLoc {
-        val loc = TileLoc.random(dimensions);
+        val loc = TileLoc.random(dimensions)
         return if (!blocking(loc)) loc
         else randomNonBlocking()
     }

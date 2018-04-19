@@ -1,12 +1,8 @@
 package weft.game.creatures
 
 import weft.display.Glyph
-import weft.game.map.TileLoc
-import weft.game.creatures.ai.BaseAI
-import weft.game.dice.D0
-import weft.game.dice.Dice
-import weft.game.map.Direction
 import weft.game.map.GameMap
+import weft.game.map.TileLoc
 import java.awt.Dimension
 import java.awt.Point
 import java.util.concurrent.atomic.AtomicLong

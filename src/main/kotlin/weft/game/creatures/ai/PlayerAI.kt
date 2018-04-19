@@ -2,10 +2,9 @@ package weft.game.creatures.ai
 
 import weft.game.creatures.Creature
 import weft.game.creatures.Player
-import weft.game.creatures.Spider
 import weft.game.map.MoveCost
-import weft.game.map.TileType
 import weft.game.map.TileLoc
+import weft.game.map.TileType
 
 class PlayerAI(private val owner: Player) : BaseAI(owner) {
 
@@ -27,7 +26,7 @@ class PlayerAI(private val owner: Player) : BaseAI(owner) {
 
     override fun onUpdate() {
         //if(target == null)
-            target = owner.map.creatures.nearby(owner.position, 20).filter { c -> !isFriendlyTo(c) }.firstOrNull()
+        target = owner.map.creatures.nearby(owner.position, 20).firstOrNull { c -> !isFriendlyTo(c) }
 
         val t = target ?: return
         if(t.isDead){

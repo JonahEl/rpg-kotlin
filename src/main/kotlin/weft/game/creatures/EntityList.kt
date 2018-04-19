@@ -5,7 +5,7 @@ import weft.game.map.TileLoc
 import java.awt.Dimension
 import java.awt.Point
 
-class EntityList<T : Entity>(private val blocking: Boolean = false, val tileBlockCheck: (loc: TileLoc) -> Boolean , override val size: Int = 0) : MutableCollection<T> {
+class EntityList<T : Entity>(private val blocking: Boolean = false, private val tileBlockCheck: (loc: TileLoc) -> Boolean, override val size: Int = 0) : MutableCollection<T> {
     private val items: MutableList<T> = mutableListOf()
     private val toAdd: MutableList<T> = mutableListOf()
     private val toRemove: MutableList<T> = mutableListOf()

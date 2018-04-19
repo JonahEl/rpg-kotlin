@@ -1,7 +1,10 @@
 package weft.game.map
 
 import weft.display.Glyph
-import weft.game.creatures.*
+import weft.game.creatures.Creature
+import weft.game.creatures.EntityList
+import weft.game.creatures.Player
+import weft.game.creatures.Projectile
 import weft.game.map.generators.MapGenerator
 import java.awt.Dimension
 import java.awt.Point
@@ -26,7 +29,7 @@ class GameMap(generator: MapGenerator) {
         player.position = findEmptyLocation()
     }
 
-    tailrec fun findEmptyLocation(): TileLoc {
+    private tailrec fun findEmptyLocation(): TileLoc {
         val loc = tiles.randomNonBlocking()
         return if(!creatures.occupied(loc)) loc
         else findEmptyLocation()

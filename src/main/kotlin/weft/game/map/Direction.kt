@@ -13,38 +13,38 @@ enum class Direction {
     NW;
 
     fun x() : Int {
-        when(this) {
-            Direction.NE -> return 1
-            Direction.N -> return 0
-            Direction.NW -> return -1
+        return when (this) {
+            Direction.NE -> 1
+            Direction.N -> 0
+            Direction.NW -> -1
 
-            Direction.E -> return 1
-            Direction.W -> return -1
+            Direction.E -> 1
+            Direction.W -> -1
 
-            Direction.SE -> return 1
-            Direction.S -> return 0
-            Direction.SW -> return -1
+            Direction.SE -> 1
+            Direction.S -> 0
+            Direction.SW -> -1
         }
     }
 
     fun y() : Int {
-        when(this) {
-            Direction.NE -> return -1
-            Direction.N -> return -1
-            Direction.NW -> return -1
+        return when (this) {
+            Direction.NE -> -1
+            Direction.N -> -1
+            Direction.NW -> -1
 
-            Direction.E -> return 0
-            Direction.W -> return 0
+            Direction.E -> 0
+            Direction.W -> 0
 
-            Direction.SE -> return 1
-            Direction.S -> return 1
-            Direction.SW -> return 1
+            Direction.SE -> 1
+            Direction.S -> 1
+            Direction.SW -> 1
         }
     }
 
     companion object {
         fun random() : Direction {
-            return values().get(Dice.random(0, 7))
+            return values()[Dice.random(0, 7)]
         }
 
         fun normalize(x : Int, y : Int) : Direction {

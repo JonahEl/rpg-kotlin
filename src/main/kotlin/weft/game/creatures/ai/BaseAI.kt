@@ -2,15 +2,15 @@ package weft.game.creatures.ai
 
 import weft.game.creatures.Creature
 import weft.game.creatures.Player
-import weft.game.map.TileType
 import weft.game.map.TileLoc
+import weft.game.map.TileType
 
 open class BaseAI (private val owner: Creature) {
     var target: Creature? = null
 
     open fun isFriendlyTo(other: Creature) : Boolean{
         if(other == owner) return true
-        return !(other is Player)
+        return other !is Player
     }
 
     open fun onInteract(other: Creature) {
@@ -30,7 +30,7 @@ open class BaseAI (private val owner: Creature) {
 
     open fun onUpdate() {
         if (target == null && owner.sightRange > 0)
-            target = owner.map.creatures.nearby(owner.position, owner.sightRange).filter { c -> !isFriendlyTo(c) }.firstOrNull();
+            target = owner.map.creatures.nearby(owner.position, owner.sightRange).firstOrNull { c -> !isFriendlyTo(c) }
 
         val t = target ?: return
         if(t.isDead){
