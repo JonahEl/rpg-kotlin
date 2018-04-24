@@ -1,0 +1,28 @@
+apply plugin: 'kotlin'
+apply plugin: 'application'
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    compile "io.vertx:vertx-core:$vertx_version"
+    compile "io.vertx:vertx-tcp-eventbus-bridge:$vertx_version"
+    compile "io.vertx:vertx-web:$vertx_version"
+
+    compile 'org.slf4j:slf4j-simple:1.7.25'
+
+    compile project(':rpg-common')
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+run {
+    standardInput = System.in
+}
+
+mainClassName = "rpgserver.AppMain"

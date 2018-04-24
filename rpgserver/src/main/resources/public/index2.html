@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="stomp.js" type="text/javascript"></script>
+    <script>
+        var stompClient, stompDest;
+
+        function stompConnect(url, login, passcode, destination) {
+            stompDest = destination;
+
+            stompClient = Stomp.client(url);
+
+            // this allows to display debug logs directly on the web page
+            stompClient.debug = function (str) {
+                console.log(str);
+            };
+
+            // the client is notified when it is connected to the server.
+            var onconnect = function (frame) {
+                stompClient.debug("connected to Stomp");
+                stompClient.subscribe(stompDest, function (message) {
+                    console.log(message)
+                });
+            };
+            stompClient.connect(login, passcode, onconnect);
+            return false;
+        }
+
+        function stompDisconnect() {
+            stompClient.disconnect(function () {
+                console.log("disconnected");
+            });
+            return false;
+        }
+
+        function stompSend(text) {
+            if (text) {
+                console.log("sending " + text);
+                stompClient.send(stompDest, {foo: 1}, text);
+            }
+            return false;
+        }
+
+        var ws = null;
+        var maxWidth = 0;
+        var maxHeight = 0;
+        var cellData = new Array(0);
+        var cssClass = new Array(0);
+        var blankCssClass = updateCssClass("white", "black");
+
+        function updateCssClass(foreColor, backColor) {
+            var key = "clr_" + foreColor.replace("#", "") + "_" + backColor.replace("#", "");
+            if (cssClass.indexOf(key) >= 0)
+                return key;
+
+            cssClass.push(key);
+            $('<style>td.' + key + ' { color: ' + foreColor + '; background-color: ' + backColor + ' }</style>').appendTo('head');
+            return key;
+        }
+
+        function initCells(w, h) {
+            maxWidth = w;
+            maxHeight = h;
+            cellData = new Array(maxWidth);
+            for (var x = 0; x < maxWidth; x++) {
+                var row = new Array(maxHeight);
+                for (var y = 0; y < maxHeight; y++) {
+                    row[y] = {
+                        character: 0x20,
+                        cssClass: blankCssClass,
+                        dirty: true
+                    };
+                }
+                cellData[x] = row
+            }
+        }
+
+        function initTable() {
+            var tbl = $("#gameTable");
+            tbl.empty();
+            for (var y = 0; y < maxHeight; y++) {
+                var row = "<tr id='row_" + y + "'>";
+                for (var x = 0; x < maxWidth; x++) {
+                    row += "<td class='white_black' id='cell_" + x + "_" + y + "'>.</td>";
+                }
+                row += "</tr>";
+                tbl.append(row);
+            }
+        }
+
+        function render() {
+            for (var x = 0; x < maxWidth; x++) {
+                for (var y = 0; y < maxHeight; y++) {
+                    var cd = cellData[x][y];
+                    if (!cd.dirty)
+                        continue;
+
+                    $("#cell_" + x + "_" + y).html("&#" + cd.character + ";").attr('class', "baseCell " + cd.cssClass);
+                    cd.dirty = false;
+                }
+            }
+        }
+
+        function writeRect(x, y, w, h, c, fc, bc) {
+            if (x < 0) x = 0;
+            if (y < 0) y = 0;
+            for (var i = x; i < w && i < maxWidth; i++) {
+                for (var j = y; j < h && j < maxHeight; j++) {
+                    write(i, j, c, fc, bc);
+                }
+            }
+        }
+
+        function writeString(x, y, s, fc, bc) {
+            for (var i = 0; i < s.length; i++) {
+                write(x + i, y, s.charCodeAt(i), fc, bc);
+            }
+        }
+
+        function write(x, y, c, fc, bc) {
+            if (x < 0) return;
+            if (x >= maxWidth) return;
+            if (y < 0) return;
+            if (y >= maxHeight) return;
+
+            var cd = cellData[x][y];
+            cd.character = c;
+            cd.cssClass = updateCssClass(fc, bc);
+            cd.dirty = true;
+        }
+
+        function connect() {
+            ws = new WebSocket("ws://" + location.hostname + ":7070/chat");
+            ws.onmessage = function (msg) {
+                var d = JSON.parse(msg.data);
+                if (d.restart) {
+                    initCells(d.width, d.height);
+                    initTable();
+                }
+                if (d.cells) {
+                    for (var i = 0; i < d.cells.length; i++) {
+                        var c = d.cells[i];
+                        write(c.x, c.y, c.glyph, c.foreColor, c.backColor)
+                    }
+                }
+                render();
+            };
+            ws.onclose = function () {
+                console.log("WebSocket connection closed");
+            };
+            ws.onopen = function (ev) {
+                console.log("WebSocket connection opened");
+            };
+        }
+
+        function sendKeyDown(event) {
+            if (!ws) return;
+            ws.send(JSON.stringify({
+                key: event.key,
+                shiftKey: event.shiftKey,
+                ctrlKey: event.ctrlKey,
+                altKey: event.altKey
+            }))
+        }
+
+        $(function () {
+            stompConnect("ws://localhost:61614/stomp", "user", "fire4effect", "/queue/game/user1");
+
+            connect();
+            initCells(12, 4);
+            initTable();
+
+            window.addEventListener("keypress", function (event) {
+                if (event.defaultPrevented)
+                    return;
+                if (event.ctrlKey && event.key === "r")
+                    return;
+                if (event.key === "F12")
+                    return;
+                sendKeyDown(event);
+                event.preventDefault();
+            }, true);
+        });
+    </script>
+    <style>
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            background-color: #121212;
+        }
+
+        table.dataTable {
+            table-layout: fixed;
+            width: 1200px;
+            border-collapse: collapse;
+            border: 0 none;
+        }
+
+        td.baseCell {
+            width: 12px;
+            height: 16px;
+            text-align: center;
+            vertical-align: center;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+<div style="align-content: center; vertical-align: center;">
+    <table id="gameTable" class="dataTable">
+    </table>
+</div>
+</body>
+</html>

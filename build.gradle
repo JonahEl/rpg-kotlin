@@ -1,52 +1,32 @@
-buildscript {
-    ext.kotlin_version = '1.2.30'
+apply plugin: 'application'
+
+allprojects {
+    group = "weft.rpg"
+    version = "1.0"
 
     repositories {
         mavenCentral()
+        jcenter()
     }
-    dependencies {
-        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:3.5.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
 
-group 'weft'
-version '1.0-SNAPSHOT'
+    buildscript {
+        ext.kotlin_version = '1.2.30'
+        ext.vertx_version = "3.4.2"
 
-apply plugin: 'biz.aQute.bnd.workspace'
-apply plugin: 'kotlin'
-apply plugin: 'application'
+        repositories {
+            mavenCentral()
+            jcenter()
+        }
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    compile 'io.javalin:javalin:1.5.0'
-    compile 'org.slf4j:slf4j-simple:1.7.25'
-    compile 'org.json:json:20180130'
-    compile 'org.apache.qpid:qpid-jms-client:0.31.0'
-}
-
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
-subprojects {
-    if (plugins.hasPlugin('biz.aQute.bnd')) {
-        bnd.project.getDependson()*.getName().each { dependency ->
-            compileKotlin.dependsOn(":${dependency}:assemble")
+        dependencies {
+            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         }
     }
 }
 
-run {
-    standardInput = System.in
+dependencies {
+    // Make the root project archives configuration depend on every subproject
+    subprojects.forEach {
+        archives(it)
+    }
 }
-
-mainClassName = "weft.AppMain"
